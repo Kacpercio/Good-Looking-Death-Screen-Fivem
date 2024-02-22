@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <meta charset="utf-8">
+        <style> 
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&family=Quicksand:wght@600;700&display=swap');
+        #box {
+            font-size: 10px;
+            font-weight: 700;
+            text-align: left;
+            font-family: 'Open Sans', sans-serif;
+            color: white;
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 25px;
+            padding: 10px;
+            width: 340px;
+            height: 120px;
+            opacity: 80%;
+            text-shadow: #31313133;
+        }
+        .flex {
+            display: flex;
+            height: 100%;
+        }
+        .inner-circle {
+
+            font-family: 'Open Sans', sans-serif;
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 20px;
+            padding: 0;
+
+        }
+        #jp {
+            font-size: 60px;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 700;
+            margin-top: 500px;
+            color: #ffffff;
+        }
+        body {
+            background-image: url("https://d3kjluh73b9h9o.cloudfront.net/original/3X/d/f/df45c22946e95839e34240651bf0d9ae208431d3.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        </style>
+    </head>
+    <body>
+        <div>
+        <div id="jp">
+            <p>00:00</p>
+        </div>
+        <div id="box">
+            <div class="flex">
+                <div class="inner-circle">
+                </div>
+                <div style="height: 90%;">
+                    <h1 style="margin-left: 70px;">Wykrwiawiasz Się</h1>
+                    <h2>Oczekuj na pomoc medyczną w przypadku braku pomocy, po upływie czasu na zegarze możesz przytrzymać [E]</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script>
+            let time = 0
+            function secondsToTime(e){
+                const m = Math.floor(e % 3600 / 60).toString().padStart(2,'0'),
+                s = Math.floor(e % 60).toString().padStart(2,'0');
+                
+                return m + ':' + s;
+            }
+            window.addEventListener("message", (ev) => {
+                let name = ev.data.name
+                
+                if (name == "time") {
+                    let newTime = secondsToTime(ev.data.time)
+                    document.querySelector("#jp").innerHTML = newTime
+                    $("body").show()
+                    time = ev.data.time
+                } else if (name == "hide") {
+                    $("body").hide()
+                    time = 0
+                }
+            })
+            setInterval(() => {
+                if (time > 0) {
+                    document.querySelector("#jp").innerHTML = secondsToTime(time)
+                    time--
+                } else if (time < 1) {
+                    $("body").hide()
+                }
+            }, 1000);
+        </script>
+    </body>
+</html>
